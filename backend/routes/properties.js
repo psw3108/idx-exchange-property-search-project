@@ -2,7 +2,7 @@ const express = require('express');
 const pool = require('../db');
 const router = express.Router();
 
-router.get('/', async(req, res) => {
+router.get('/', async (req, res) => {
     try {
         // pagination
         const limit = req.query.limit === undefined ? 20 : Number(req.query.limit);
@@ -22,7 +22,15 @@ router.get('/', async(req, res) => {
         }
 
         // validate filters
-        const { city, zipcode, minPrice, maxPrice, beds, baths } = req.query;
+        let { city, zipcode, minPrice, maxPrice, beds, baths } = req.query;
+
+        // guard against ?city=a&city=b -> array, and non-string input
+        if (city !== undefined && typeof city !== 'string') {
+            return res.status(400).json({ error: 'city must be a single string value' });
+        }
+        if (zipcode !== undefined && typeof zipcode !== 'string') {
+            return res.status(400).json({ error: 'zipcode must be a single string value' });
+        }
 
         if (city !== undefined && city.trim() === '') {
             return res.status(400).json({
@@ -36,32 +44,35 @@ router.get('/', async(req, res) => {
             });
         }
 
-        if (minPrice !== undefined && Number.isNaN(Number(minPrice))) {
+        // Number('') === 0, not NaN, so explicitly reject empty strings first
+        const isBlank = (v) => v !== undefined && String(v).trim() === '';
+
+        if (minPrice !== undefined && (isBlank(minPrice) || Number.isNaN(Number(minPrice)))) {
             return res.status(400).json({
                 error: 'minPrice must be a valid number',
             });
         }
 
-        if (maxPrice !== undefined && Number.isNaN(Number(maxPrice))) {
+        if (maxPrice !== undefined && (isBlank(maxPrice) || Number.isNaN(Number(maxPrice)))) {
             return res.status(400).json({
                 error: 'maxPrice must be a valid number',
             });
         }
 
-        if (beds !== undefined && Number.isNaN(Number(beds))) {
+        if (beds !== undefined && (isBlank(beds) || Number.isNaN(Number(beds)))) {
             return res.status(400).json({
                 error: 'beds must be a valid number',
             });
         }
 
-        if (baths !== undefined && Number.isNaN(Number(baths))) {
+        if (baths !== undefined && (isBlank(baths) || Number.isNaN(Number(baths)))) {
             return res.status(400).json({
                 error: 'baths must be a valid number',
             });
         }
 
-
         // build base query for the data and total count
+        // TODO: replace SELECT * with only the columns the frontend actually needs to cut down on I/O and network transfer.
         let dataSql = 'SELECT * FROM rets_property';
         let countSql = 'SELECT COUNT(*) AS total FROM rets_property';
 
@@ -106,14 +117,16 @@ router.get('/', async(req, res) => {
             countSql += whereClause;
         }
 
-        // get total count
-        const [countRows] = await pool.query(countSql, values);
-        const total = countRows[0].total;
-
-        // add pagination to data sql query and get data
         dataSql += ' ORDER BY id LIMIT ? OFFSET ?';
         const dataValues = [...values, limit, offset];
-        const [rows] = await pool.query(dataSql, dataValues);
+
+        // run count + data queries concurrently
+        const [[countRows], [rows]] = await Promise.all([
+            pool.query(countSql, values),
+            pool.query(dataSql, dataValues),
+        ]);
+
+        const total = countRows[0].total;
 
         res.json({
             total,
