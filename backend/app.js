@@ -9,6 +9,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Request logging middleware
+app.use((req, res, next) => {
+    const startTime = Date.now();
+    const timestamp = new Date().toISOString();
+
+    res.on('finish', () => {
+        const responseTime = Date.now() - startTime;
+        console.log(`${timestamp} ${req.method} ${req.originalUrl} ${res.statusCode} ${responseTime}ms`);
+    });
+
+    next();
+});
+
 // basic server run check
 app.get('/', (req, res) => {
   res.send('Backend server is running');
