@@ -1,0 +1,78 @@
+.listings-page {
+  width: 100%;
+  padding: 20px clamp(16px, 2vw, 32px);
+}
+
+.listings-page h1 {
+  margin: 12px 0 8px;
+  text-align: center;
+  font-size: clamp(40px, 4vw, 60px);
+  line-height: 1.1;
+}
+
+.listings-count {
+  margin: 0 0 24px;
+  text-align: center;
+}
+
+.property-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 32px 24px;
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .property-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .property-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .property-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .property-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.page-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-height: 200px;
+  text-align: center;
+}
+
+.page-message p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.no-results {
+  margin: 2rem auto;
+  text-align: center;
+  color: #a7a7b2;
+}
+
+.no-results h2 {
+  margin: 0 0 0.5rem;
+  color: #f5f5f5;
+  font-size: 1.5rem;
+}
+
+.no-results p {
+  margin: 0;
+  font-size: 1rem;
+}

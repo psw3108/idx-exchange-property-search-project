@@ -1,0 +1,60 @@
+.property-filters {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 1rem;
+
+  margin: 1.5rem 0 1rem;
+  padding: 0 1rem;
+
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.filter-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.filter-field label {
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.filter-field input,
+.filter-field select {
+  height: 2.5rem;
+  padding: 0 0.75rem;
+
+  font-size: 1rem;
+
+  border: 1px solid #444;
+  border-radius: 0.5rem;
+  background-color: #222;
+  color: inherit;
+}
+
+.filter-field input {
+  min-width: 11rem;
+}
+
+.filter-field select {
+  min-width: 7rem;
+}
+
+.filter-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.filter-actions button {
+  height: 2.5rem;
+  padding: 0 1rem;
+
+  font-size: 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}

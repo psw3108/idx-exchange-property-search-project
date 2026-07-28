@@ -1,3 +1,5 @@
+import './PropertyCard.css';
+
 function PropertyCard({ property }) {
   let photoUrl = null;
 
@@ -25,16 +27,20 @@ function PropertyCard({ property }) {
         />
       </div>
 
-      <h2>{property.L_Address}</h2>
+      <h2>${property.L_SystemPrice ? Number(property.L_SystemPrice).toLocaleString() : 'N/A'}</h2>
 
+      <div className="property-card-details">
+        <span>{property.L_Keyword2} bds</span>
+        <span className="property-card-divider">|</span>
+        <span>{property.LM_Dec_3} ba</span>
+        <span className="property-card-divider">|</span>
+        <span>{Number(property.LM_Int2_3).toLocaleString()} sqft</span>
+      </div>
+
+      <p>{property.L_Address}</p>
       <p>
-        {property.L_City}, {property.L_State}
+        {property.L_City}, {property.L_State}, {property.L_Zip}
       </p>
-
-      <p>${property.L_SystemPrice ? Number(property.L_SystemPrice).toLocaleString() : 'N/A'}</p>
-      <p>{property.L_Keyword2} Beds</p>
-      <p>{property.LM_Dec_3} Baths</p>
-      <p>{property.LM_Int2_3} Sqft</p>
     </article>
   );
 }

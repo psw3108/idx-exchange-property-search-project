@@ -35,7 +35,16 @@ async function request(endpoint, options = {}) {
 }
 
 export function fetchProperties(params = {}) {
-  const query = new URLSearchParams(params).toString();
+  const cleanedParams = Object.fromEntries(
+    Object.entries(params).filter(
+      ([, value]) =>
+        value !== '' &&
+        value !== null &&
+        value !== undefined
+    )
+  );
+
+  const query = new URLSearchParams(cleanedParams).toString();
 
   return request(`/properties${query ? `?${query}` : ''}`);
 }
