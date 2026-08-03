@@ -2,30 +2,52 @@ import { useEffect, useState } from 'react';
 import { fetchProperties } from '../api/client';
 import PropertyCard from '../components/PropertyCard';
 import PropertyFilters from '../components/PropertyFilters';
+import Pagination from '../components/Pagination';
 import './ListingsPage.css';
 
 
 function ListingsPage() {
   const [properties, setProperties] = useState([]);
-  const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [total, setTotal] = useState(0);
 
+  const [filters, setFilters] = useState({});
+
   // filter handling
   function applyFilters(newFilters) {
     setFilters(newFilters);
+    setPage(1);
   }
+
+  // page handling
+  const [currentPage, setPage] = useState(1);
+  const listingPerPage = 20;
+
+  // calculate total pages
+  const totalPages = Math.ceil(total / listingPerPage);
+  
+  // calculate offset, 
+  const offset = (currentPage - 1) * listingPerPage;
+
+  // page switching handling
+  function handlePageChange(newPageNumber) {
+    setPage(newPageNumber);
+    window.scrollTo(0, 0)
+  }
+
 
   useEffect(() => {
     async function loadProperties() {
       try {
-        // Week 5 testing loading state
-        // await new Promise((resolve) => setTimeout(resolve, 2000));
         setLoading(true);
         setError(null);
 
-        const data = await fetchProperties(filters);
+      const data = await fetchProperties({
+        ...filters,
+        limit: listingPerPage,
+        offset,
+      });
 
         setProperties(data.results);
         setTotal(data.total);
@@ -38,14 +60,14 @@ function ListingsPage() {
     }
 
     loadProperties();
-  }, [filters]);
+  }, [filters, currentPage]);
 
   return (
     <main className="listings-page">
       <h1>Property Listings</h1>
 
       {/* filters */}
-      <PropertyFilters passFilters={applyFilters} />
+      <PropertyFilters onApply={applyFilters} />
       
       {loading && (
         <div className="page-message" role="status">
@@ -73,7 +95,7 @@ function ListingsPage() {
       {!loading && !error && total > 0 && (
         <>
           <p className="listings-count">
-            Showing {properties.length} of {total.toLocaleString()} properties
+            Showing {offset + 1} - {Math.min(total, offset + listingPerPage)} of {total.toLocaleString()} properties
           </p>
 
           <div className="property-grid">
@@ -85,6 +107,15 @@ function ListingsPage() {
             ))}
           </div>
         </>
+      )}
+
+      {/* Render Pagination Controls */}
+      {!loading && !error && totalPages > 1 && (
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={handlePageChange}
+        />
       )}
     </main>
   );

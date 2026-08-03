@@ -5,7 +5,7 @@ import PropertyFilters from './PropertyFilters';
 describe('PropertyFilters', () => {
   // test 1
   test('renders all six filter controls', () => {
-    render(<PropertyFilters passFilters={jest.fn()} />);
+    render(<PropertyFilters onApply={jest.fn()} />);
 
     expect(screen.getByLabelText(/city/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/zip code/i)).toBeInTheDocument();
@@ -18,9 +18,9 @@ describe('PropertyFilters', () => {
   // test 2
   test('submits multiple filter values through the form', async () => {
     const user = userEvent.setup();
-    const mockPassFilters = jest.fn();
+    const mockonApply = jest.fn();
 
-    render(<PropertyFilters passFilters={mockPassFilters} />);
+    render(<PropertyFilters onApply={mockonApply} />);
 
     await user.type(screen.getByLabelText(/city/i), 'Irvine');
     await user.type(screen.getByLabelText(/zip code/i), '92612');
@@ -34,9 +34,9 @@ describe('PropertyFilters', () => {
       screen.getByRole('button', { name: /^search$/i }),
     );
 
-    expect(mockPassFilters).toHaveBeenCalledTimes(1);
+    expect(mockonApply).toHaveBeenCalledTimes(1);
 
-    expect(mockPassFilters).toHaveBeenCalledWith({
+    expect(mockonApply).toHaveBeenCalledWith({
       city: 'Irvine',
       zipcode: '92612',
       minPrice: '500000',
@@ -49,9 +49,9 @@ describe('PropertyFilters', () => {
   // test 3
   test('clear resets all controls and passes empty filters', async () => {
     const user = userEvent.setup();
-    const mockPassFilters = jest.fn();
+    const mockonApply = jest.fn();
 
-    render(<PropertyFilters passFilters={mockPassFilters} />);
+    render(<PropertyFilters onApply={mockonApply} />);
 
     const cityInput = screen.getByLabelText(/city/i);
     const zipcodeInput = screen.getByLabelText(/zip code/i);
@@ -78,9 +78,9 @@ describe('PropertyFilters', () => {
     expect(bedsSelect).toHaveValue('');
     expect(bathsSelect).toHaveValue('');
 
-    expect(mockPassFilters).toHaveBeenCalledTimes(1);
+    expect(mockonApply).toHaveBeenCalledTimes(1);
 
-    expect(mockPassFilters).toHaveBeenCalledWith({
+    expect(mockonApply).toHaveBeenCalledWith({
       city: '',
       zipcode: '',
       minPrice: '',

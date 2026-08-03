@@ -13,7 +13,7 @@ const initialFilters = {
   baths: '',
 };
 
-function PropertyFilters({ passFilters }) {
+function PropertyFilters({ onApply }) {
   const [filters, setFilters] = useState(initialFilters);
 
   function handleChange(event) {
@@ -27,14 +27,14 @@ function PropertyFilters({ passFilters }) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    passFilters(filters);
+    onApply(filters);
   }
 
 function handleClear() {
   const clearedFilters = { ...initialFilters };
 
   setFilters(clearedFilters);
-  passFilters(clearedFilters);
+  onApply(clearedFilters);
 }
 
   return (
