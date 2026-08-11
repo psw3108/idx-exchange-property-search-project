@@ -1,30 +1,14 @@
+import { parsePhotos } from '../../utils/parsePhotos';
 import './PropertyCard.css';
+import PropertyImageCarousel from "../PropertyImageCarousel/PropertyImageCarousel";
 
 function PropertyCard({ property }) {
-  let photoUrl = null;
-
-  try {
-    const photos = JSON.parse(property.L_Photos);
-
-    if (Array.isArray(photos) && photos.length > 0) {
-      photoUrl = photos[0];
-    }
-  } catch (error) {
-    console.error('Could not parse property photos:', error);
-  }
+  const photos = parsePhotos(property.L_Photos);
 
   return (
     <article className="property-card">
       <div className="property-card-image-container">
-        <img
-          className="property-card-image"
-          src={photoUrl || '/placeholder.jpg'}
-          alt={property.L_Address || 'Property photo'}
-          onError={(event) => {
-            event.currentTarget.onerror = null;
-            event.currentTarget.src = '/placeholder.jpg';
-          }}
-        />
+        <PropertyImageCarousel images={photos} />
       </div>
 
       <h2>${property.L_SystemPrice ? Number(property.L_SystemPrice).toLocaleString() : 'N/A'}</h2>

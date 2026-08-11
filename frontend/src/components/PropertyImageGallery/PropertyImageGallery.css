@@ -1,0 +1,144 @@
+.property-gallery-thumbnail-container {
+  position: relative;
+  max-width: 900px;
+  margin-top: 12px;
+}
+
+.property-gallery-thumbnails {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+
+  scrollbar-width: none;
+}
+
+.property-gallery-thumbnails::-webkit-scrollbar {
+  display: none;
+}
+
+.property-gallery-thumbnail-button {
+  border: none;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.property-gallery-thumbnail {
+  width: 110px;
+  height: 75px;
+  object-fit: cover;
+  display: block;
+}
+
+.thumbnail-scroll-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+
+  width: 40px;
+  height: 40px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.65);
+  color: white;
+
+  font-size: 28px;
+  font-weight: bold;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.thumbnail-scroll-button:hover {
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.thumbnail-scroll-left {
+  left: 8px;
+}
+
+.thumbnail-scroll-right {
+  right: 8px;
+}
+
+.property-gallery-thumbnail-button {
+  border: 3px solid transparent;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.property-gallery-thumbnail-button.active {
+  border-color: white;
+}
+
+.property-gallery-main {
+  cursor: pointer;
+}
+
+.property-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.property-lightbox-image {
+  max-width: 90vw;
+  max-height: 90vh;
+  object-fit: contain;
+}
+
+.property-lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+
+  border: none;
+  background: none;
+  color: white;
+
+  font-size: 40px;
+  cursor: pointer;
+}
+
+.property-lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1001;
+
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.65);
+  color: white;
+  font-size: 32px;
+  cursor: pointer;
+}
+
+.property-lightbox-prev {
+  left: 24px;
+}
+
+.property-lightbox-next {
+  right: 24px;
+}

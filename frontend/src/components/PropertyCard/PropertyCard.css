@@ -1,5 +1,14 @@
 .property-card {
   min-width: 0;
+  height: 100%;
+
+  padding: 12px;
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+
+  box-sizing: border-box;
+
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
@@ -15,6 +24,7 @@
   aspect-ratio: 4 / 3;
   overflow: hidden;
   margin-bottom: 14px;
+  border-radius: 8px;
 }
 
 .property-card-image {

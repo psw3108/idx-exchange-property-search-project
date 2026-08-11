@@ -53,5 +53,9 @@ export function fetchPropertyDetail(id) {
   return request(`/properties/${id}`);
 }
 
+export function fetchPropertyOpenHouses(id) {
+  return request(`/properties/${id}/openhouses`);
+}
+
 
 

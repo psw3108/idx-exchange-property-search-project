@@ -76,3 +76,14 @@
   margin: 0;
   font-size: 1rem;
 }
+
+.property-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  min-width: 0;
+}
+
+.property-card-link:visited {
+  color: inherit;
+}

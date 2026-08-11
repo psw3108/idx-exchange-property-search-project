@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { fetchProperties } from '../api/client';
-import PropertyCard from '../components/PropertyCard';
-import PropertyFilters from '../components/PropertyFilters';
-import Pagination from '../components/Pagination';
+import { fetchProperties } from '../../api/client';
+import { Link } from 'react-router-dom';
+import PropertyCard from '../../components/PropertyCard/PropertyCard';
+import PropertyFilters from '../../components/PropertyFilters/PropertyFilters';
+import Pagination from '../../components/Pagination/Pagination';
 import './ListingsPage.css';
 
 
@@ -100,10 +101,13 @@ function ListingsPage() {
 
           <div className="property-grid">
             {properties.map((property) => (
-              <PropertyCard
+              <Link
+                className="property-card-link"
                 key={property.id}
-                property={property}
-              />
+                to={`/properties/${property.id}`}
+              >
+                <PropertyCard property={property} />
+              </Link>
             ))}
           </div>
         </>
