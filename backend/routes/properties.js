@@ -72,6 +72,35 @@ router.get('/', async (req, res) => {
             });
         }
 
+        // Dynamic Sorting with Allowlist Validation
+        const sortByParam = req.query.sortBy;     
+        const sortOrderParam = req.query.sortOrder; 
+
+        const allowedColumns = {
+            price: 'L_SystemPrice',
+            dateListed: 'ListingContractDate',
+            sqft: 'LM_Int2_3',
+            beds: 'L_Keyword2'
+        };
+
+        // validate sort parameters
+        if (sortByParam !== undefined && !allowedColumns[sortByParam]) {
+            return res.status(400).json({
+                error: 'Invalid sort value',
+            });
+        }
+
+        if (sortOrderParam !== undefined && !['ASC', 'DESC'].includes(String(sortOrderParam).toUpperCase())) {
+            return res.status(400).json({
+                error: 'Invalid sort order',
+            });
+        }
+
+        // Map parameter to valid column
+        const sortBy = allowedColumns[sortByParam] || 'id';
+        const sortOrder = sortOrderParam ? String(sortOrderParam).toUpperCase() : 'ASC';
+
+
         // build base query for the data and total count
         // TODO: replace SELECT * with only the columns the frontend actually needs to cut down on I/O and network transfer.
         let dataSql = 'SELECT * FROM rets_property';
@@ -82,8 +111,8 @@ router.get('/', async (req, res) => {
 
         // add filters
         if (city) {
-            conditions.push('LOWER(TRIM(L_City)) = LOWER(TRIM(?))');
-            values.push(city);
+            conditions.push('L_City = ?');
+            values.push(city.trim());
         }
 
         if (zipcode) {
@@ -118,7 +147,11 @@ router.get('/', async (req, res) => {
             countSql += whereClause;
         }
 
-        dataSql += ' ORDER BY id LIMIT ? OFFSET ?';
+        // concatenate sorting
+        dataSql += ` ORDER BY ${sortBy} ${sortOrder}, id ASC`;
+
+        // concatenate pagination
+        dataSql += ' LIMIT ? OFFSET ?';
         const dataValues = [...values, limit, offset];
 
         // run count + data queries concurrently

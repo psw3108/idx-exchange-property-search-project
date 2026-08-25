@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import PropertyCard from '../../components/PropertyCard/PropertyCard';
 import PropertyFilters from '../../components/PropertyFilters/PropertyFilters';
 import Pagination from '../../components/Pagination/Pagination';
+import PropertySort from '../../components/PropertySort/PropertySort';
 import './ListingsPage.css';
 
 
@@ -15,10 +16,29 @@ function ListingsPage() {
 
   const [filters, setFilters] = useState({});
 
+  // sorting
+  const [selectedSort, setSelectedSort] = useState('');
+  const sortOptions = {
+    'price-asc': { sortBy: 'price', sortOrder: 'ASC' },
+    'price-desc': { sortBy: 'price', sortOrder: 'DESC' },
+    'dateListed-desc': { sortBy: 'dateListed', sortOrder: 'DESC' },
+    'dateListed-asc': { sortBy: 'dateListed', sortOrder: 'ASC' },
+    'sqft-desc': { sortBy: 'sqft', sortOrder: 'DESC' },
+    'sqft-asc': { sortBy: 'sqft', sortOrder: 'ASC' },
+    'beds-desc': { sortBy: 'beds', sortOrder: 'DESC' },
+    'beds-asc': { sortBy: 'beds', sortOrder: 'ASC' },
+  };
+
+  function handleSort(selectedValue) {
+    setSelectedSort(selectedValue);
+    setPage(1);
+  }
+
   // filter handling
   function applyFilters(newFilters) {
     setFilters(newFilters);
     setPage(1);
+    setSelectedSort('');
   }
 
   // page handling
@@ -46,6 +66,7 @@ function ListingsPage() {
 
       const data = await fetchProperties({
         ...filters,
+        ...(sortOptions[selectedSort] || {}),
         limit: listingPerPage,
         offset,
       });
@@ -61,7 +82,7 @@ function ListingsPage() {
     }
 
     loadProperties();
-  }, [filters, currentPage]);
+  }, [filters, currentPage, selectedSort]);
 
   return (
     <main className="listings-page">
@@ -95,9 +116,16 @@ function ListingsPage() {
       {/* Results found - Display property cards */}
       {!loading && !error && total > 0 && (
         <>
-          <p className="listings-count">
-            Showing {offset + 1} - {Math.min(total, offset + listingPerPage)} of {total.toLocaleString()} properties
-          </p>
+          <div className="listings-toolbar">
+            <p className="listings-count">
+              Showing {offset + 1} - {Math.min(total, offset + listingPerPage)} of {total.toLocaleString()} properties
+            </p>
+
+            <PropertySort
+              value={selectedSort}
+              onSortChange={handleSort}
+            />
+          </div>
 
           <div className="property-grid">
             {properties.map((property) => (
