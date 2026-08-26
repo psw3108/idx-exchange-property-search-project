@@ -2,7 +2,7 @@ import { fetchProperties } from './client';
 
 describe('fetchProperties', () => {
   beforeEach(() => {
-    global.fetch = jest.fn();
+    globalThis.fetch = jest.fn();
   });
 
   // test 1
@@ -20,7 +20,7 @@ describe('fetchProperties', () => {
       ],
     };
 
-    global.fetch.mockResolvedValue({
+    globalThis.fetch.mockResolvedValue({
       ok: true,
       status: 200,
       text: jest.fn().mockResolvedValue(JSON.stringify(mockData)),
@@ -30,7 +30,7 @@ describe('fetchProperties', () => {
 
     expect(result).toEqual(mockData);
 
-    expect(global.fetch).toHaveBeenCalledWith(
+    expect(globalThis.fetch).toHaveBeenCalledWith(
       '/api/properties',
       {
         headers: {
@@ -42,7 +42,7 @@ describe('fetchProperties', () => {
 
   // test 2
   test('creates query parameters, omits empty values, and keeps a valid zero', async () => {
-    global.fetch.mockResolvedValue({
+    globalThis.fetch.mockResolvedValue({
       ok: true,
       status: 200,
       text: jest.fn().mockResolvedValue(
@@ -64,7 +64,7 @@ describe('fetchProperties', () => {
       baths: '',
     });
 
-    const requestedUrl = global.fetch.mock.calls[0][0];
+    const requestedUrl = globalThis.fetch.mock.calls[0][0];
     const parsedUrl = new URL(requestedUrl, 'http://localhost');
 
     expect(parsedUrl.pathname).toBe('/api/properties');
@@ -79,7 +79,7 @@ describe('fetchProperties', () => {
 
   // test 3
   test('throws the server error message when the response is unsuccessful', async () => {
-    global.fetch.mockResolvedValue({
+    globalThis.fetch.mockResolvedValue({
       ok: false,
       status: 500,
       text: jest.fn().mockResolvedValue(

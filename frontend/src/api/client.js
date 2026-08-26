@@ -9,7 +9,7 @@ async function request(endpoint, options = {}) {
     });
   } catch (networkErr) {
     // fetch only throws here for network-level failures — server down, no connection, CORS block
-    throw new Error('Unable to reach the server. Please check your connection or try again later.');
+    throw new Error('Unable to reach the server. Please check your connection or try again later.',  { cause: networkErr } );
   }
 
   const text = await response.text();
