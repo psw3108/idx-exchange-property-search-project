@@ -6,6 +6,37 @@ function PropertyImageGallery({ photos }) {
   const thumbnailRef = useRef(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
+  // Lightbox escape key, left/right key handler
+  useEffect(() => {
+    if (!lightboxOpen || !photos || photos.length === 0) {
+      return;
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        setLightboxOpen(false);
+      }
+
+      if (event.key === 'ArrowLeft') {
+        setSelectedIndex((prevIndex) =>
+          prevIndex === 0 ? photos.length - 1 : prevIndex - 1
+        );
+      }
+
+      if (event.key === 'ArrowRight') {
+        setSelectedIndex((prevIndex) =>
+          prevIndex === photos.length - 1 ? 0 : prevIndex + 1
+        );
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [lightboxOpen, photos]);
+
   if (!photos || photos.length === 0) {
     return (
       <div className="property-gallery">
@@ -40,34 +71,6 @@ function PropertyImageGallery({ photos }) {
       prevIndex === photos.length - 1 ? 0 : prevIndex + 1
     );
   }
-
-  // Lightbox escape key, left/right key handler
-  useEffect(() => {
-    if (!lightboxOpen) {
-      return;
-    }
-
-    function handleKeyDown(event) {
-      if (event.key === 'Escape') {
-        setLightboxOpen(false);
-      }
-
-      if (event.key === 'ArrowLeft') {
-        showPreviousImage();
-      }
-
-      if (event.key === 'ArrowRight') {
-        showNextImage();
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [lightboxOpen, photos.length]);
-
 
   return (
     <div className="property-gallery">
