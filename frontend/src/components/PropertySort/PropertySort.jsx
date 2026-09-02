@@ -17,8 +17,8 @@ export default function PropertySort({ value, onSortChange }) {
         onChange={handleChange}
       >
         <option value="">Default</option>
-        <option value="price-asc">Price: Low to High</option>
         <option value="price-desc">Price: High to Low</option>
+        <option value="price-asc">Price: Low to High</option>
         <option value="dateListed-desc">Date Listed: Newest</option>
         <option value="dateListed-asc">Date Listed: Oldest</option>
         <option value="sqft-desc">Sqft: Biggest</option>
