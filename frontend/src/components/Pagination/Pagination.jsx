@@ -2,7 +2,7 @@ import './Pagination.css';
 
 function Pagination({ currentPage, totalPages, onPageChange }) {
     // page array
-    let pageNumbers;
+    let pageNumbers = [];
 
     if (totalPages <= 7) {
         // display all pages

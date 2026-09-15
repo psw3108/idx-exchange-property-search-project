@@ -1,3 +1,5 @@
+import React from 'react';
+
 export default function PropertyMap({ property }) {
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
