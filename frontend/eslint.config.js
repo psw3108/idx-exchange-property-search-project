@@ -1,52 +1,21 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
-import jest from 'eslint-plugin-jest';
-import { defineConfig, globalIgnores } from 'eslint/config';
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
   globalIgnores(['dist']),
-
-  js.configs.recommended,
-
   {
     files: ['**/*.{js,jsx}'],
-
-    plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
-    },
-
+    extends: [
+      js.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+    ],
     languageOptions: {
-      ecmaVersion: 2020,
       globals: globals.browser,
-
-      parserOptions: {
-        ecmaVersion: 'latest',
-        ecmaFeatures: { jsx: true },
-        sourceType: 'module',
-      },
-    },
-
-    rules: {
-      ...reactHooks.configs['recommended-latest'].rules,
-      ...reactRefresh.configs.vite.rules,
+      parserOptions: { ecmaFeatures: { jsx: true } },
     },
   },
-
-  {
-    files: ['**/*.test.{js,jsx}'],
-
-    plugins: {
-      jest,
-    },
-
-    languageOptions: {
-      globals: {
-        ...globals.browser,
-        ...jest.environments.globals.globals,
-      },
-    },
-  },
-]);
+])

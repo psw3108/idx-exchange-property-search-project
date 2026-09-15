@@ -6,44 +6,18 @@ function PropertyImageGallery({ photos }) {
   const thumbnailRef = useRef(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
-  // Lightbox escape key, left/right key handler
-  useEffect(() => {
-    if (!lightboxOpen || !photos || photos.length === 0) {
-      return;
-    }
-
-    function handleKeyDown(event) {
-      if (event.key === 'Escape') {
-        setLightboxOpen(false);
-      }
-
-      if (event.key === 'ArrowLeft') {
-        setSelectedIndex((prevIndex) =>
-          prevIndex === 0 ? photos.length - 1 : prevIndex - 1
-        );
-      }
-
-      if (event.key === 'ArrowRight') {
-        setSelectedIndex((prevIndex) =>
-          prevIndex === photos.length - 1 ? 0 : prevIndex + 1
-        );
-      }
-    }
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [lightboxOpen, photos]);
+  function handleImageError(event) {
+    event.currentTarget.onerror = null;
+    event.currentTarget.src = '/placeholder.jpg';
+  }
 
   if (!photos || photos.length === 0) {
     return (
       <div className="property-gallery">
         <img
           className="property-gallery-main"
-          src="/placeholder.jpg"
-          alt="Property"
+          src="/noimage.jpg"
+          alt="No property image available"
         />
       </div>
     );
@@ -72,57 +46,101 @@ function PropertyImageGallery({ photos }) {
     );
   }
 
+  useEffect(() => {
+    if (!lightboxOpen) {
+      return;
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        setLightboxOpen(false);
+      }
+
+      if (event.key === 'ArrowLeft') {
+        showPreviousImage();
+      }
+
+      if (event.key === 'ArrowRight') {
+        showNextImage();
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [lightboxOpen, photos.length]);
+
   return (
     <div className="property-gallery">
       {/* Main image */}
       <div className="property-gallery-main-container">
         <img
-          className="property-gallery-main"
+          className={`property-gallery-main ${
+            selectedPhoto === '/placeholder.jpg' || selectedPhoto === '/noimage.jpg'
+              ? 'placeholder-image'
+              : ''
+          }`}
           src={selectedPhoto}
           alt={`Property photo ${selectedIndex + 1}`}
           onClick={() => setLightboxOpen(true)}
+          onError={(event) => {
+            event.currentTarget.onerror = null;
+            event.currentTarget.src = '/placeholder.jpg';
+            event.currentTarget.classList.add('placeholder-image');
+          }}
         />
       </div>
 
       {/* Thumbnail strip */}
-      <div className="property-gallery-thumbnail-container">
-        <button
-          className="thumbnail-scroll-button thumbnail-scroll-left"
-          onClick={() => scrollThumbnails(-1)}
-        >
-          ‹
-        </button>
+      {photos.length > 1 && (
+        <div className="property-gallery-thumbnail-container">
 
-        <div
-          className="property-gallery-thumbnails"
-          ref={thumbnailRef}
-        >
-          {photos.map((photo, index) => (
+          {photos.length > 6 && (
             <button
-              key={index}
-              className={`property-gallery-thumbnail-button ${
-                index === selectedIndex ? 'active' : ''
-              }`}
-              onClick={() => setSelectedIndex(index)}
+              className="thumbnail-scroll-button thumbnail-scroll-left"
+              onClick={() => scrollThumbnails(-1)}
             >
-              <img
-                className="property-gallery-thumbnail"
-                src={photo}
-                alt={`Property thumbnail ${index + 1}`}
-              />
+              ‹
             </button>
-          ))}
+          )}
+
+          <div
+            className="property-gallery-thumbnails"
+            ref={thumbnailRef}
+          >
+            {photos.map((photo, index) => (
+              <button
+                key={index}
+                className={`property-gallery-thumbnail-button ${
+                  index === selectedIndex ? 'active' : ''
+                }`}
+                onClick={() => setSelectedIndex(index)}
+              >
+                <img
+                  className="property-gallery-thumbnail"
+                  src={photo}
+                  alt={`Property thumbnail ${index + 1}`}
+                  onError={handleImageError}
+                />
+              </button>
+            ))}
+          </div>
+
+          {photos.length > 6 && (
+            <button
+              className="thumbnail-scroll-button thumbnail-scroll-right"
+              onClick={() => scrollThumbnails(1)}
+            >
+              ›
+            </button>
+          )}
+
         </div>
+      )}
 
-        <button
-          className="thumbnail-scroll-button thumbnail-scroll-right"
-          onClick={() => scrollThumbnails(1)}
-        >
-          ›
-        </button>
-      </div>
-
-      {/* Lightbox on click */}
+      {/* Lightbox */}
       {lightboxOpen && (
         <div className="property-lightbox">
           <button
@@ -145,6 +163,7 @@ function PropertyImageGallery({ photos }) {
             className="property-lightbox-image"
             src={selectedPhoto}
             alt={`Property photo ${selectedIndex + 1}`}
+            onError={handleImageError}
           />
 
           {photos.length > 1 && (

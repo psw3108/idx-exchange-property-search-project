@@ -1,10 +1,18 @@
+import React from 'react';
+
 export default function PropertyMap({ property }) {
   const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
-  const lat = property?.LMD_MP_Latitude;
-  const lng = property?.LMD_MP_Longitude;
+  const lat = Number(property?.LMD_MP_Latitude);
+  const lng = Number(property?.LMD_MP_Longitude);
 
-  if (!lat || !lng) {
+  const hasValidLocation =
+    Number.isFinite(lat) &&
+    Number.isFinite(lng) &&
+    lat !== 0 &&
+    lng !== 0;
+
+  if (!hasValidLocation) {
     return <p>No map location available for this property.</p>;
   }
 

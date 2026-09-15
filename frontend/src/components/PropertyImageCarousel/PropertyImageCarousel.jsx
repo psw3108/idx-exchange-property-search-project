@@ -25,7 +25,7 @@ const PropertyImageCarousel = ({ images }) => {
     setCurrentIndex(newIndex);
   };
 
-  const imageUrl = hasImages ? images[currentIndex] : "/placeholder.jpg";
+  const imageUrl = hasImages ? images[currentIndex] : "/noimage.jpg";
 
   return (
     <div className="property-image-carousel">
@@ -33,7 +33,7 @@ const PropertyImageCarousel = ({ images }) => {
       <img
         className="property-card-image"
         src={imageUrl}
-        alt="Property"
+        alt={hasImages ? "Property" : "No property image available"}
         onError={(event) => {
           event.currentTarget.onerror = null;
           event.currentTarget.src = "/placeholder.jpg";
