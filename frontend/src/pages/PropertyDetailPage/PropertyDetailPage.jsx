@@ -2,9 +2,48 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchPropertyDetail, fetchPropertyOpenHouses } from '../../api/client';
 import { parsePhotos } from '../../utils/parsePhotos';
+import { formatAddress } from '../../utils/formatAddress';
 import PropertyImageGallery from '../../components/PropertyImageGallery/PropertyImageGallery';
 import PropertyMap from '../../components/PropertyMap/PropertyMap';
 import './PropertyDetailPage.css';
+
+function formatDate(dateString) {
+  if (!dateString) return '';
+
+  const date = new Date(dateString);
+
+  return date.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    timeZone: 'UTC',
+  });
+}
+
+function formatTime(timeString) {
+  if (!timeString) return '';
+
+  const [hours, minutes] = timeString.split(':');
+
+  const date = new Date();
+  date.setHours(Number(hours), Number(minutes));
+
+  return date.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
+function formatBaths(baths) {
+  if (baths == null || baths === '') return null;
+
+  const value = Number(baths);
+
+  return Number.isInteger(value)
+    ? value.toString()
+    : value.toString();
+}
 
 function getOpenHouseRemarks(allData) {
   if (!allData) return 'No remarks available';
@@ -67,33 +106,65 @@ function PropertyDetailPage() {
 
       {!loading && !error && property && (
         <div className="property-detail-page">
+          {/* Gallery and right cards */}
+          <section className="property-hero">
 
-          {/* Map + Gallery */}
-          <div className="property-media">
-            <div className="property-map-container">
-              <PropertyMap property={property} />
-            </div>
-
-            <div className="property-gallery-container">
+            <div className="property-gallery-section">
               <PropertyImageGallery photos={photos} />
             </div>
-          </div>
 
-          {/* Property Details */}
-          <section className="property-info">
-            <h1>${property.L_SystemPrice ? Number(property.L_SystemPrice).toLocaleString() : 'N/A'}</h1>
 
-            <p className="property-address">
-              {property.L_Address}, {property.L_City}, {property.L_State}, {property.L_Zip}
-            </p>
+            <div className="property-side-column">
 
-            <div className="property-stats">
-              <p>{property.L_Keyword2} Beds</p>
-              <p>{property.LM_Dec_3} Baths</p>
-              <p>{property.LM_Int2_3} Sqft</p>
-              <p>Built in {property.YearBuilt}</p>
+              <div className="property-summary">
+
+                <h1>
+                  {property.L_SystemPrice
+                    ? `$${Number(property.L_SystemPrice).toLocaleString()}`
+                    : 'Price unavailable'}
+                </h1>
+
+                <p className="property-address">
+                  {formatAddress(property)}
+                </p>
+
+                <div className="property-stats">
+                  {property.L_Keyword2 != null && (
+                    <p>{property.L_Keyword2} Beds</p>
+                  )}
+
+                  {property.LM_Dec_3 != null && (
+                    <p>{formatBaths(property.LM_Dec_3)} Baths</p>
+                  )}
+
+                  {property.LM_Int2_3 != null &&
+                    property.LM_Int2_3 !== 0 && (
+                      <p>
+                        {Number(property.LM_Int2_3).toLocaleString()} Sqft
+                      </p>
+                    )}
+
+                  {property.YearBuilt != null &&
+                    property.YearBuilt !== 0 && (
+                      <p>Built in {property.YearBuilt}</p>
+                    )}
+                </div>
+
+              </div>
+
+
+              <div className="property-side-map">
+                <h2>Location</h2>
+
+                <PropertyMap property={property} />
+              </div>
+
             </div>
 
+          </section>
+
+          {/* Description */}
+          <section className="property-description-section">
             <div className="property-description">
               <h2>Property Details</h2>
               <p>{property.L_Remarks}</p>
@@ -101,32 +172,36 @@ function PropertyDetailPage() {
           </section>
 
           {/* Open House */}
-          {openHouses.length === 0 ? (
-            <div className="no-open-house">
-              <h2>No open houses scheduled</h2>
-            </div>
-          ) : (
-            <section className="property-open-house">
-              <h2>Open Houses</h2>
+          <section className="property-open-house-section">
+            {openHouses.length === 0 ? (
+              <div className="no-open-house">
+                <h2>No open houses scheduled</h2>
+              </div>
+            ) : (
+              <>
+                <h2>Open Houses</h2>
 
-              {openHouses.map((openHouse, index) => {
-                const remarks = getOpenHouseRemarks(openHouse.all_data);
+                {openHouses.map((openHouse, index) => {
+                  const remarks = getOpenHouseRemarks(openHouse.all_data);
 
-                return (
-                  <div className="open-house-card" key={index}>
-                    <p>Open house date: {openHouse.OpenHouseDate}</p>
+                  return (
+                    <div className="open-house-card" key={index}>
+                      <p>
+                        Open house date: {formatDate(openHouse.OpenHouseDate)}
+                      </p>
 
-                    <p>
-                      Start / end time: {openHouse.OH_StartTime} /{' '}
-                      {openHouse.OH_EndTime}
-                    </p>
+                      <p>
+                        Start / End time: {formatTime(openHouse.OH_StartTime)} /{' '}
+                        {formatTime(openHouse.OH_EndTime)}
+                      </p>
 
-                    <p>Remarks: {remarks}</p>
-                  </div>
-                );
-              })}
-            </section>
-          )}
+                      <p>Remarks: {remarks}</p>
+                    </div>
+                  );
+                })}
+              </>
+            )}
+          </section>
 
         </div>
       )}

@@ -86,17 +86,25 @@ function ListingsPage() {
 
   return (
     <main className="listings-page">
-      <h1>Property Listings</h1>
+      {/* Search/filter Panel */}
+      <section className="listings-hero">
 
-      {/* filters */}
-      <PropertyFilters onApply={applyFilters} />
+        <h1>Property Listings</h1>
+
+        <PropertyFilters
+          onApply={applyFilters}
+        />
+
+      </section>
       
+      {/* Loading */}
       {loading && (
         <div className="page-message" role="status">
           <p>Loading properties...</p>
         </div>
       )}
 
+      {/* Loading Error */}
       {!loading && error && (
         <div className="page-message">
           <p role="alert">

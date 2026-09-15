@@ -1,127 +1,621 @@
+/* =========================
+   Property Detail Page
+   ========================= */
+
 .property-detail-page {
-  width: 100%;
-  max-width: 1400px;
+  width: min(1360px, calc(100% - 4rem));
   margin: 0 auto;
-  padding: 32px clamp(16px, 3vw, 40px);
+  padding: 2rem 0 4rem;
 }
 
-/* Map + gallery area */
-.property-media {
+
+/* =========================
+   Hero Layout
+   Gallery Left / Info Right
+   ========================= */
+
+.property-hero {
   display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: 20px;
-  margin-bottom: 32px;
+
+  grid-template-columns:
+    minmax(0, 1.8fr)
+    minmax(340px, 1fr);
+
+  gap: 2.5rem;
+
+  /*
+    Important:
+    both grid columns stretch to the
+    height of the tallest column.
+  */
+  align-items: stretch;
+
+  width: 100%;
+
+  margin-bottom: 3.5rem;
 }
 
-.property-map-container,
-.property-gallery-container {
+
+/* =========================
+   Gallery
+   ========================= */
+
+.property-gallery-section {
+  width: 100%;
   min-width: 0;
-  border-radius: 12px;
+}
+
+
+/*
+  Keep the gallery itself at its normal
+  size. It determines the hero row height.
+*/
+
+.property-gallery-section .property-gallery {
+  width: 100%;
+}
+
+
+/* Main gallery image */
+
+.property-gallery-section
+.property-gallery-main-container {
+  width: 100%;
+
+  aspect-ratio: 3 / 2;
+
   overflow: hidden;
+
+  background: #111;
+
+  border-radius: 8px;
 }
 
-/* Main property information */
-.property-info {
-  margin-bottom: 32px;
+.property-gallery-section
+.property-gallery-main {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
 }
 
-.property-info h1 {
-  margin: 0 0 16px;
-  font-size: clamp(2rem, 4vw, 3rem);
-  line-height: 1.1;
+
+/* =========================
+   Right Side Column
+   ========================= */
+
+.property-side-column {
+  display: flex;
+  flex-direction: column;
+
+  gap: 1.5rem;
+
+  min-width: 0;
+
+  /*
+    Makes summary + map together
+    equal the gallery column height.
+  */
+  height: 100%;
 }
+
+
+/* =========================
+   Property Summary
+   ========================= */
+
+.property-summary {
+  width: 100%;
+
+  flex-shrink: 0;
+
+  padding: 1.75rem;
+
+  background:
+    linear-gradient(
+      145deg,
+      #1b1d24 0%,
+      #181a20 100%
+    );
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+
+/* Price */
+
+.property-summary h1 {
+  margin: 0 0 0.6rem;
+
+  font-family: var(--heading);
+
+  font-size: clamp(2.2rem, 3vw, 3rem);
+  font-weight: 700;
+
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+
+  color: var(--text-h);
+
+  overflow-wrap: anywhere;
+}
+
+
+/* Address */
 
 .property-address {
-  margin: 0 0 20px;
-  font-size: 1.6rem;
-  font-weight: 600;
+  margin: 0 0 1.5rem;
+
+  font-family: var(--sans);
+
+  font-size: 1.2rem;
+  font-weight: 500;
+
+  line-height: 1.5;
+
+  color: #c5c9d2;
 }
+
+
+/* =========================
+   Property Stats
+   ========================= */
 
 .property-stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px 28px;
-  margin-bottom: 24px;
+
+  gap: 0.65rem;
+
+  margin: 0;
 }
 
 .property-stats p {
   margin: 0;
-  font-size: 1rem;
+
+  padding: 0.55rem 0.85rem;
+
+  font-size: 0.92rem;
+  font-weight: 500;
+
+  color: var(--text);
+
+  background: var(--bg-surface);
+
+  border: 1px solid var(--border);
+  border-radius: 999px;
 }
 
-.property-description {
-  max-width: 1000px;
-  line-height: 1.7;
+
+/* =========================
+   Side Map Card
+   ========================= */
+
+.property-side-map {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+
+  /*
+    This card absorbs whatever height
+    remains underneath the summary.
+  */
+  flex: 1;
+  min-height: 0;
+
+  padding: 1.5rem;
+
+  background:
+    linear-gradient(
+      145deg,
+      #1b1d24 0%,
+      #181a20 100%
+    );
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.14);
 }
 
-.property-description h2 {
-  margin-bottom: 10px;
+
+/* Location heading */
+
+.property-side-map h2 {
+  margin: 0 0 1rem;
+
+  flex-shrink: 0;
+
+  font-family: var(--heading);
+
+  font-size: 1.35rem;
+  font-weight: 600;
+
+  color: var(--text-h);
 }
 
-.property-description p {
-  margin: 0;
+
+/*
+  PropertyMap returns its own wrapper div.
+  Make that wrapper consume the remaining
+  map-card height.
+*/
+
+.property-side-map > div {
+  display: flex;
+  flex-direction: column;
+
+  flex: 1;
+
+  min-height: 0;
 }
 
-/* Open house */
-.property-open-house {
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-}
 
-.property-open-house h2 {
-  margin-top: 0;
-  margin-bottom: 16px;
-}
+/* Map iframe */
 
-.open-house-card {
-  padding: 18px;
-  margin-bottom: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+.property-side-map iframe {
+  display: block;
+
+  width: 100%;
+
+  /*
+    Overrides the iframe's hard-coded
+    450px height and lets it grow/shrink
+    to fill the card.
+  */
+  height: auto;
+  min-height: 180px;
+
+  flex: 1;
+
   border-radius: 10px;
 }
 
-.open-house-card p {
-  margin: 6px 0;
+
+/* Directions area */
+
+.property-side-map > div > div {
+  flex-shrink: 0;
+
+  margin-top: 0.8rem !important;
 }
 
-.no-open-house {
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-}
 
-.no-open-house h2 {
-  margin: 0;
-  font-size: 1.3rem;
+/* Directions link */
+
+.property-side-map a {
+  display: inline-block;
+
+  font-size: 0.95rem;
   font-weight: 500;
 }
 
-/* Loading/error state */
+
+/* =========================
+   Property Description
+   ========================= */
+
+.property-description-section {
+  width: 100%;
+
+  margin-bottom: 4rem;
+}
+
+.property-description {
+  width: 100%;
+
+  padding: 1.8rem 2rem;
+
+  background:
+    linear-gradient(
+      145deg,
+      #1b1d24 0%,
+      #181a20 100%
+    );
+
+  border: 1px solid var(--border);
+  border-radius: 14px;
+
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.14);
+}
+
+
+/* Description heading */
+
+.property-description h2 {
+  margin: 0 0 1rem;
+
+  font-family: var(--heading);
+
+  font-size: 1.5rem;
+  font-weight: 600;
+
+  color: var(--text-h);
+}
+
+
+/*
+  Let description text use the whole
+  width of the card.
+*/
+
+.property-description p {
+  width: 100%;
+
+  margin: 0;
+
+  font-size: 1rem;
+  line-height: 1.75;
+
+  color: var(--text);
+}
+
+
+/* =========================
+   Open Houses
+   ========================= */
+
+.property-open-house-section {
+  width: 100%;
+
+  margin-bottom: 3rem;
+
+  padding-top: 2.5rem;
+
+  border-top: 1px solid var(--border);
+}
+
+.property-open-house-section h2 {
+  margin: 0 0 1.25rem;
+
+  font-family: var(--heading);
+
+  font-size: 1.55rem;
+  font-weight: 600;
+
+  color: var(--text-h);
+}
+
+
+/* =========================
+   No Open House
+   ========================= */
+
+.no-open-house h2 {
+  margin-bottom: 0;
+
+  color: var(--text-muted);
+}
+
+
+/* =========================
+   Open House Cards
+   ========================= */
+
+.open-house-card {
+  padding: 1.4rem 1.5rem;
+
+  margin-bottom: 1rem;
+
+  background: var(--bg-surface);
+
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.open-house-card p {
+  margin: 0 0 0.45rem;
+
+  line-height: 1.6;
+
+  color: var(--text);
+}
+
+.open-house-card p:last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================
+   Loading / Error
+   ========================= */
+
 .page-message {
-  min-height: 300px;
   display: flex;
+
   align-items: center;
   justify-content: center;
+
+  min-height: 250px;
+
+  text-align: center;
 }
 
-/* Tablet/mobile */
-@media (max-width: 900px) {
-  .property-media {
-    grid-template-columns: 1fr;
-  }
-}
 
-@media (max-width: 600px) {
+/* =========================
+   Smaller Desktop / Tablet
+   ========================= */
+
+@media (max-width: 1000px) {
+
   .property-detail-page {
-    padding: 20px 16px;
+    width: min(100% - 2rem, 1360px);
   }
+
+
+  /*
+    Return to single-column layout.
+  */
+
+  .property-hero {
+    grid-template-columns: 1fr;
+
+    gap: 2rem;
+
+    margin-bottom: 3rem;
+  }
+
+
+  /* Gallery first */
+
+  .property-gallery-section {
+    order: 1;
+  }
+
+
+  /* Information + map second */
+
+  .property-side-column {
+    order: 2;
+
+    height: auto;
+  }
+
+
+  .property-summary {
+    padding: 1.5rem;
+  }
+
+
+  .property-summary h1 {
+    font-size: 2.5rem;
+  }
+
+
+  /*
+    Map no longer needs to stretch
+    to match gallery height.
+  */
+
+  .property-side-map {
+    flex: none;
+  }
+
+  .property-side-map > div {
+    display: block;
+  }
+
+  .property-side-map iframe {
+    width: 100%;
+    height: 350px;
+
+    min-height: 0;
+
+    flex: none;
+  }
+}
+
+
+/* =========================
+   Mobile
+   ========================= */
+
+@media (max-width: 768px) {
+
+  .property-detail-page {
+    padding-top: 1rem;
+  }
+
+
+  .property-summary h1 {
+    font-size: 2.3rem;
+  }
+
+
+  .property-address {
+    font-size: 1.1rem;
+  }
+
+
+  .property-description-section {
+    margin-bottom: 3rem;
+  }
+
+
+  .property-description {
+    padding: 1.4rem;
+  }
+
+
+  .property-side-map {
+    padding: 1.2rem;
+  }
+
+
+  .property-side-map iframe {
+    height: 300px;
+  }
+
+
+  .property-open-house-section {
+    margin-bottom: 3rem;
+  }
+}
+
+
+/* =========================
+   Small Mobile
+   ========================= */
+
+@media (max-width: 480px) {
+
+  .property-detail-page {
+    width: calc(100% - 1.25rem);
+  }
+
+
+  .property-summary {
+    padding: 1.2rem;
+  }
+
+
+  .property-summary h1 {
+    font-size: 2rem;
+  }
+
+
+  .property-address {
+    font-size: 1rem;
+  }
+
 
   .property-stats {
-    gap: 10px 18px;
+    gap: 0.5rem;
   }
 
-  .property-info h1 {
-    font-size: 2rem;
+
+  .property-stats p {
+    padding: 0.5rem 0.75rem;
+
+    font-size: 0.88rem;
+  }
+
+
+  .property-side-map {
+    padding: 1rem;
+  }
+
+
+  .property-side-map iframe {
+    height: 250px;
+  }
+
+
+  .property-description {
+    padding: 1.2rem;
+  }
+
+
+  .property-description p {
+    line-height: 1.65;
   }
 }
