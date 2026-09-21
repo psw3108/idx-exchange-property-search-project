@@ -93,11 +93,13 @@ function handleClear() {
 
       <div className="filter-field">
         <label htmlFor="beds">Beds</label>
+
         <select
           id="beds"
           name="beds"
           value={filters.beds}
           onChange={handleChange}
+          className={filters.beds !== '' ? 'has-value' : ''}
         >
           <option value="">Any beds</option>
 
@@ -111,11 +113,13 @@ function handleClear() {
 
       <div className="filter-field">
         <label htmlFor="baths">Baths</label>
+
         <select
           id="baths"
           name="baths"
           value={filters.baths}
           onChange={handleChange}
+          className={filters.baths !== '' ? 'has-value' : ''}
         >
           <option value="">Any baths</option>
 
