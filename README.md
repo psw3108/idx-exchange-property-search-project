@@ -604,8 +604,6 @@ Critical backend routes and frontend components meet the required 70%+ coverage 
 - Some records contain missing or malformed photo data.
 - Properties without both latitude and longitude do not display a map.
 - Not every property has open-house information.
-- Filter and pagination state are not fully stored in the browser URL, so navigating back may not restore the previous search state.
-- The project is currently configured for local development rather than production deployment.
 
 ---
 
@@ -614,10 +612,6 @@ Critical backend routes and frontend components meet the required 70%+ coverage 
 - Store filters, sorting, and pagination in URL query parameters
 - Restore search state after returning from a property detail page
 - Improve responsive layout on smaller screens
-- Replace `SELECT *` with only required columns
-- Add additional database indexes for common search patterns
-- Add end-to-end tests
-- Add saved/favorite properties
 - Add authentication
 - Add CI for automatic tests and linting
 - Add production deployment configuration
